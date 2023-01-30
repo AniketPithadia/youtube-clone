@@ -161,16 +161,16 @@ const Video = () => {
     console.log("useEffect Calling");
     const incrementView = async () => {
       await axios.put(
-        `https://youtube-api-uxhl.onrender.com/api/videos/view/${path}`
+        `https://youtube2-0-api.onrender.com/api/videos/view/${path}`
       );
     };
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(
-          `https://youtube-api-uxhl.onrender.com/api/videos/find/${path}`
+          `https://youtube2-0-api.onrender.com/api/videos/find/${path}`
         );
         const channelRes = await axios.get(
-          `https://youtube-api-uxhl.onrender.com/api/users/find/${videoRes.data.userId}`
+          `https://youtube2-0-api.onrender.com/api/users/find/${videoRes.data.userId}`
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
@@ -184,13 +184,13 @@ const Video = () => {
 
   const handleLike = async () => {
     await axios.put(
-      `https://youtube-api-uxhl.onrender.com/api/users/like/${currentVideo._id}`
+      `https://youtube2-0-api.onrender.com/api/users/like/${currentVideo._id}`
     );
     dispatch(like(currentUser._id));
   };
   const handleDislike = async () => {
     await axios.put(
-      `https://youtube-api-uxhl.onrender.com/api/users/dislike/${currentVideo._id}`
+      `https://youtube2-0-api.onrender.com/api/users/dislike/${currentVideo._id}`
     );
     dispatch(dislike(currentUser._id));
   };
@@ -198,16 +198,16 @@ const Video = () => {
   const handleSub = async () => {
     currentUser.subscribedUsers.includes(channel._id)
       ? await axios.put(
-          `https://youtube-api-uxhl.onrender.com/api/users/unsub/${channel._id}`
+          `https://youtube2-0-api.onrender.com/api/users/unsub/${channel._id}`
         )
       : await axios.put(
-          `https://youtube-api-uxhl.onrender.com/api/users/sub/${channel._id}`
+          `https://youtube2-0-api.onrender.com/api/users/sub/${channel._id}`
         );
     dispatch(subscription(channel._id));
   };
   const handleDelete = async () => {
     await axios.delete(
-      `https://youtube-api-uxhl.onrender.com/api/videos/${currentVideo._id}`
+      `https://youtube2-0-api.onrender.com/api/videos/${currentVideo._id}`
     );
     navigate("/");
   };

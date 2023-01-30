@@ -60,7 +60,7 @@ const Card = ({ type, video }) => {
   useEffect(() => {
     const fetchChannel = async () => {
       const res = await axios.get(
-        `https://youtube-api-uxhl.onrender.com/api/users/find/${video.userId}`
+        `https://youtube2-0-api.onrender.com/api/users/find/${video.userId}`
       );
       setChannel(res.data);
     };

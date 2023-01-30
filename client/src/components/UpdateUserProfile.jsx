@@ -174,7 +174,7 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const res = await axios.put(
-      `https://youtube-api-uxhl.onrender.com/api/users/${currentUser._id}`,
+      `https://youtube2-0-api.onrender.com/api/users/${currentUser._id}`,
       {
         name,
         email,

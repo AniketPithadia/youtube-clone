@@ -139,7 +139,7 @@ const Upload = ({ setOpen }) => {
     e.preventDefault();
     // inputs = { ...inputs, tags };
     const res = await axios.post(
-      "https://youtube-api-uxhl.onrender.com/api/videos",
+      "https://youtube2-0-api.onrender.com/api/videos",
       { ...inputs, tags }
     );
     setOpen(false);
