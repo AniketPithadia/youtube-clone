@@ -173,11 +173,14 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
   };
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const res = await axios.put(`/users/${currentUser._id}`, {
-      name,
-      email,
-      img: profileDownloadUrl,
-    });
+    const res = await axios.put(
+      `https://youtube-api-uxhl.onrender.com/api/users/${currentUser._id}`,
+      {
+        name,
+        email,
+        img: profileDownloadUrl,
+      }
+    );
     setOpenUpdateProfile(false);
     dispatch(logout());
     res.status === 200 && navigate(`/signin`);

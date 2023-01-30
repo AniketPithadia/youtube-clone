@@ -142,7 +142,10 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post("/auth/signin", { name, password });
+      const res = await axios.post(
+        "https://youtube-api-uxhl.onrender.com/api/auth/signin",
+        { name, password }
+      );
       dispatch(loginSuccess(res.data));
       navigate("/");
     } catch (err) {
@@ -154,12 +157,15 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(registerStart());
     try {
-      const res = await axios.post("/auth/signup", {
-        name,
-        email,
-        password,
-        img: profileDownloadUrl,
-      });
+      const res = await axios.post(
+        "https://youtube-api-uxhl.onrender.com/api/auth/signup",
+        {
+          name,
+          email,
+          password,
+          img: profileDownloadUrl,
+        }
+      );
 
       dispatch(registerSuccess(res.data), loginSuccess(res.data));
       navigate("/");
@@ -173,7 +179,7 @@ const SignIn = () => {
     try {
       signInWithPopup(auth, provider).then((result) => {
         axios
-          .post("/auth/google", {
+          .post("https://youtube-api-uxhl.onrender.com/api/auth/google", {
             name: result.user.displayName,
             email: result.user.email,
             img: result.user.photoURL,

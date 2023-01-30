@@ -52,7 +52,6 @@ function App() {
                   path="signin"
                   element={currentUser ? <Home /> : <SignIn />}
                 />
-                {/* <Route path="updateProfile" element={<UpdateUserProfile />} /> */}
                 <Route path="video">
                   <Route path=":id" element={<Video />} />
                 </Route>
