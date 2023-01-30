@@ -10,7 +10,7 @@ import cors from "cors";
 
 const corsOptions = {
   credentials: "true",
-  origin: "https://youtube-2-0-delta.vercel.app/",
+  origin: "https://youtube-2-0-delta.vercel.app",
 };
 const app = express();
 app.use(cors(corsOptions));
