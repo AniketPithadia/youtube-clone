@@ -144,7 +144,7 @@ const SignIn = () => {
     try {
       const res = await axios.post(
         "https://youtube-api-uxhl.onrender.com/api/auth/signin",
-        { name, password }
+        { name, password, credentials: "include" }
       );
       dispatch(loginSuccess(res.data));
       navigate("/");
@@ -164,6 +164,7 @@ const SignIn = () => {
           email,
           password,
           img: profileDownloadUrl,
+          credentials: "include",
         }
       );
 
@@ -183,6 +184,7 @@ const SignIn = () => {
             name: result.user.displayName,
             email: result.user.email,
             img: result.user.photoURL,
+            credentials: "include",
           })
           .then((res) => {
             dispatch(loginSuccess(res.data));
