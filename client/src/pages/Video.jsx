@@ -213,66 +213,74 @@ const Video = () => {
   };
   return (
     <Container>
-      <Content>
-        <VideoWrapper>
-          <VideoFrame src={currentVideo.videoUrl} controls />
-        </VideoWrapper>
-        <Title>{currentVideo.title}</Title>
-        <Details>
-          <Info>
-            {currentVideo.views} views • {format(currentVideo.createdAt)}
-          </Info>
-          <Buttons>
-            <Button onClick={handleLike}>
-              {currentVideo.likes?.includes(currentUser?._id) ? (
-                <ThumbUpIcon />
+      {currentVideo ? (
+        <>
+          <Content>
+            <VideoWrapper>
+              <VideoFrame src={currentVideo.videoUrl} controls />
+            </VideoWrapper>
+            <Title>{currentVideo.title}</Title>
+            <Details>
+              <Info>
+                {currentVideo.views} views • {format(currentVideo.createdAt)}
+              </Info>
+              <Buttons>
+                <Button onClick={handleLike}>
+                  {currentVideo.likes?.includes(currentUser?._id) ? (
+                    <ThumbUpIcon />
+                  ) : (
+                    <ThumbUpOutlinedIcon />
+                  )}
+                  {currentVideo.likes?.length}
+                </Button>
+                <Button onClick={handleDislike}>
+                  {currentVideo.dislikes?.includes(currentUser?._id) ? (
+                    <ThumbDownIcon />
+                  ) : (
+                    <ThumbDownOffAltOutlinedIcon />
+                  )}
+                  Dislike
+                </Button>
+                <Button>
+                  <ReplyOutlinedIcon /> Share
+                </Button>
+                <Button>
+                  <AddTaskOutlinedIcon /> Save
+                </Button>
+              </Buttons>
+            </Details>
+            <Hr />
+            <Channel>
+              <ChannelInfo>
+                <Image src={channel.img} />
+                <ChannelDetail>
+                  <ChannelName>{channel.name}</ChannelName>
+                  <ChannelCounter>
+                    {channel.subscribers} subscribers
+                  </ChannelCounter>
+                  <Description>{currentVideo.desc}</Description>
+                </ChannelDetail>
+              </ChannelInfo>{" "}
+              {currentUser._id === currentVideo.userId ? (
+                <DeleteVideoButton onClick={handleDelete}>
+                  Delete Video
+                </DeleteVideoButton>
               ) : (
-                <ThumbUpOutlinedIcon />
+                <Subscribe onClick={handleSub}>
+                  {currentUser.subscribedUsers?.includes(channel._id)
+                    ? "SUBSCRIBED"
+                    : "SUBSCRIBE"}
+                </Subscribe>
               )}
-              {currentVideo.likes?.length}
-            </Button>
-            <Button onClick={handleDislike}>
-              {currentVideo.dislikes?.includes(currentUser?._id) ? (
-                <ThumbDownIcon />
-              ) : (
-                <ThumbDownOffAltOutlinedIcon />
-              )}
-              Dislike
-            </Button>
-            <Button>
-              <ReplyOutlinedIcon /> Share
-            </Button>
-            <Button>
-              <AddTaskOutlinedIcon /> Save
-            </Button>
-          </Buttons>
-        </Details>
-        <Hr />
-        <Channel>
-          <ChannelInfo>
-            <Image src={channel.img} />
-            <ChannelDetail>
-              <ChannelName>{channel.name}</ChannelName>
-              <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
-              <Description>{currentVideo.desc}</Description>
-            </ChannelDetail>
-          </ChannelInfo>{" "}
-          {currentUser._id === currentVideo.userId ? (
-            <DeleteVideoButton onClick={handleDelete}>
-              Delete Video
-            </DeleteVideoButton>
-          ) : (
-            <Subscribe onClick={handleSub}>
-              {currentUser.subscribedUsers?.includes(channel._id)
-                ? "SUBSCRIBED"
-                : "SUBSCRIBE"}
-            </Subscribe>
-          )}
-        </Channel>
-        <Hr />
-        <Comments videoId={currentVideo._id} userId={currentUser._id} />
-      </Content>
-      <Recommendation tags={currentVideo.tags} />
+            </Channel>
+            <Hr />
+            <Comments videoId={currentVideo._id} userId={currentUser._id} />
+          </Content>
+          <Recommendation tags={currentVideo.tags} />
+        </>
+      ) : (
+        <h1>Nothing here</h1>
+      )}
     </Container>
   );
 };
