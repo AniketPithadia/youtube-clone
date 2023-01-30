@@ -8,12 +8,12 @@ import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import cors from cors;
 
-const app = express();
-app.use(cors({
-  "Access-Control-Allow-Credentials": "true",
-  "Access-Control-Allow-Origin": "https://localhost:3000",
+const corsOptions = {
+ credentials: "true",
+ origin: "https://youtube-2-0-delta.vercel.app/",
 }
-));
+const app = express();
+app.use(cors(corsOptions));
 dotenv.config();
 
 const connect = () => {
