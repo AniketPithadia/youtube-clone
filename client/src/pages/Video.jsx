@@ -154,7 +154,7 @@ const Video = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
-
+  const [readyForRender, setReadyForRender] = useState(false);
   const [channel, setChannel] = useState({});
 
   useEffect(() => {
@@ -174,6 +174,7 @@ const Video = () => {
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
+        setReadyForRender(true);
       } catch (err) {
         console.log(err);
       }
