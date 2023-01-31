@@ -275,7 +275,7 @@ const Video = () => {
               )}
             </Channel>
             <Hr />
-            <Comments videoId={currentVideo._id} userId={currentUser._id} />
+            {/* <Comments videoId={currentVideo._id} userId={currentUser._id} /> */}
           </Content>
           <Recommendation tags={currentVideo.tags} />
         </>
