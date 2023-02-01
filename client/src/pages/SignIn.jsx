@@ -146,6 +146,7 @@ const SignIn = () => {
         "https://youtube2-0-api.onrender.com/api/auth/signin",
         { name, password, credentials: "include" }
       );
+
       dispatch(loginSuccess(res.data));
       navigate("/");
     } catch (err) {
