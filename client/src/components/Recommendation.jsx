@@ -13,9 +13,7 @@ const Recommendation = ({ tags }) => {
   const { currentVideo } = useSelector((state) => state.video);
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(
-        `https://youtube2-0-api.onrender.com/api/videos/tags?tags=${tags}`
-      );
+      const res = await axios.get(`/videos/tags?tags=${tags}`);
       setVideos(res.data);
     };
     fetchVideos();

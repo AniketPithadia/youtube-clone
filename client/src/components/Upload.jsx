@@ -138,10 +138,7 @@ const Upload = ({ setOpen }) => {
   const handleUpload = async (e) => {
     e.preventDefault();
     // inputs = { ...inputs, tags };
-    const res = await axios.post(
-      "https://youtube2-0-api.onrender.com/api/videos",
-      { ...inputs, tags }
-    );
+    const res = await axios.post("/videos", { ...inputs, tags });
     setOpen(false);
     res.status === 200 && navigate(`/video/${res.data._id}`);
   };

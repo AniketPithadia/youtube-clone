@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 import axios from "axios";
-import { useSelector } from "react-redux";
+
 const Container = styled.div`
   display: grid;
   grid-column-gap: 30px;
-
+  hieght: 100vh;
   grid-template-columns: repeat(4, 1fr);
   @media (max-width: 1025px) {
     grid-row-gap: 15px;
@@ -26,9 +26,7 @@ const Home = ({ type }) => {
   useEffect(() => {
     console.log("useEffect Calling!!!!");
     const fetchVideos = async () => {
-      const res = await axios.get(
-        `https://youtube2-0-api.onrender.com/api/videos/${type}`
-      );
+      const res = await axios.get(`/videos/${type}`);
 
       setVideos(res.data);
       console.log(res.data);

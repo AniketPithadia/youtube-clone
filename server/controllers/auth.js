@@ -5,35 +5,51 @@ import { createError } from "../error.js";
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
+  const { name, email, password } = req.body;
+  const hashedPwd = bcrypt.hashSync(password, 10);
+
+  const newUser = new User({ name, email, password: hashedPwd });
+
   try {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
-    const newUser = new User({ ...req.body, password: hash });
-
-    await newUser.save();
-
-    res.status(200).send(newUser);
-  } catch (err) {
-    next(err);
+    await newUser
+      .save()
+      .then((user) => {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const { password: pwd, ...rest } = user._doc;
+        res
+          .cookie("access_token", token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+          })
+          .status(200)
+          .json(rest);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (error) {
+    next(errorHandler(409, "User Already Exists"));
   }
 };
 
 export const signin = async (req, res, next) => {
   try {
-    const user = await User.findOne({ name: req.body.name });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
     if (!user) return next(createError(404, "User not found!"));
 
-    const isCorrect = await bcrypt.compare(req.body.password, user.password);
+    const isCorrect = bcrypt.compareSync(password, user.password);
 
     if (!isCorrect) return next(createError(400, "Wrong Credentials!"));
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT);
-    const { password, ...others } = user._doc;
-
-    res
-      .cookie("access_token", token, { secure: true })
-      .status(200)
-      .json(others);
+    const { password: pwd, ...others } = user._doc;
+    jwt.sign({ id: user._id }, process.env.JWT_SECRET, {}, (err, token) => {
+      if (err) throw err;
+      res
+        .cookie("access_token", token, { secure: true })
+        .status(200)
+        .json(others);
+    });
   } catch (err) {
     next(err);
   }
@@ -43,24 +59,43 @@ export const googleAuth = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password, ...rest } = user._doc;
       res
         .cookie("access_token", token, {
           httpOnly: true,
+          maxAge: 24 * 60 * 60 * 1000,
         })
         .status(200)
-        .json(user._doc);
+        .json(rest);
     } else {
+      const generatedPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
+      const username =
+        req.body.name.split(" ").join("").toLowerCase() +
+        Math.random().toString(36).slice(-4);
       const newUser = new User({
-        ...req.body,
-        fromGoogle: true,
+        name: username,
+        email: req.body.email,
+        password: hashedPassword,
+        img: req.body.img,
       });
-      const savedUser = await newUser.save();
-      const token = jwt.sign({ id: savedUser._id }, process.env.JWT);
-      res
-        .cookie("access_token", token, { secure: true })
-        .status(200)
-        .json(savedUser._doc);
+      await newUser
+        .save()
+        .then((user) => {
+          const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+          const { password: pwd, ...rest } = user._doc;
+          res
+            .cookie("access_token", token, {
+              httpOnly: true,
+              maxAge: 24 * 60 * 60 * 1000,
+            })
+            .status(200)
+            .json(rest);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   } catch (err) {
     next(err);

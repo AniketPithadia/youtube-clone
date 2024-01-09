@@ -8,7 +8,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Comments from "../components/Comments";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { dislike, fetchSuccess, like } from "../redux/videoSlice";
 import { format } from "timeago.js";
@@ -17,7 +17,6 @@ import Recommendation from "../components/Recommendation";
 
 const Container = styled.div`
   display: flex;
-
   gap: 24px;
   flex-direction: row;
   @media (max-width: 768px) {
@@ -27,7 +26,7 @@ const Container = styled.div`
 
 const Content = styled.div`
   flex: 5;
-  height: 100vh;
+  height: 100%;
 `;
 const VideoWrapper = styled.div`
   border-radius: 10px;
@@ -116,7 +115,7 @@ const Description = styled.p`
 `;
 
 const Subscribe = styled.button`
-  background-color: #cc1a00;
+  background-color: ${(props) => (props.subscribed ? "#cc1a00" : "gray")};
   font-weight: 500;
   color: white;
   border: none;
@@ -147,30 +146,33 @@ const VideoFrame = styled.video`
   width: 100%;
   object-fit: cover;
 `;
+const ShareIcon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
+  const [copied, setCopied] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
   const [readyForRender, setReadyForRender] = useState(false);
   const [channel, setChannel] = useState({});
+  const checkIsSubscribed = currentUser.subscribedUsers?.includes(channel._id);
 
   useEffect(() => {
     console.log("useEffect Calling");
     const incrementView = async () => {
-      await axios.put(
-        `https://youtube2-0-api.onrender.com/api/videos/view/${path}`
-      );
+      await axios.put(`/videos/view/${path}`);
     };
     const fetchData = async () => {
       try {
-        const videoRes = await axios.get(
-          `https://youtube2-0-api.onrender.com/api/videos/find/${path}`
-        );
+        const videoRes = await axios.get(`/videos/find/${path}`);
         const channelRes = await axios.get(
-          `https://youtube2-0-api.onrender.com/api/users/find/${videoRes.data.userId}`
+          `/users/find/${videoRes.data.userId}`
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
@@ -184,32 +186,22 @@ const Video = () => {
   }, [path, dispatch]);
 
   const handleLike = async () => {
-    await axios.put(
-      `https://youtube2-0-api.onrender.com/api/users/like/${currentVideo._id}`
-    );
+    await axios.put(`/users/like/${currentVideo._id}`);
     dispatch(like(currentUser._id));
   };
   const handleDislike = async () => {
-    await axios.put(
-      `https://youtube2-0-api.onrender.com/api/users/dislike/${currentVideo._id}`
-    );
+    await axios.put(`/users/dislike/${currentVideo._id}`);
     dispatch(dislike(currentUser._id));
   };
 
   const handleSub = async () => {
     currentUser.subscribedUsers.includes(channel._id)
-      ? await axios.put(
-          `https://youtube2-0-api.onrender.com/api/users/unsub/${channel._id}`
-        )
-      : await axios.put(
-          `https://youtube2-0-api.onrender.com/api/users/sub/${channel._id}`
-        );
+      ? await axios.put(`/users/unsub/${channel._id}`)
+      : await axios.put(`/users/sub/${channel._id}`);
     dispatch(subscription(channel._id));
   };
   const handleDelete = async () => {
-    await axios.delete(
-      `https://youtube2-0-api.onrender.com/api/videos/${currentVideo._id}`
-    );
+    await axios.delete(`/videos/${currentVideo._id}`);
     navigate("/");
   };
   return (
@@ -242,8 +234,22 @@ const Video = () => {
                   )}
                   Dislike
                 </Button>
-                <Button>
-                  <ReplyOutlinedIcon /> Share
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    setCopied(true);
+                    setTimeout(() => {
+                      setCopied(false);
+                    }, 2000);
+                  }}
+                >
+                  {copied ? (
+                    <span> Copied!</span>
+                  ) : (
+                    <ShareIcon>
+                      <ReplyOutlinedIcon /> Share
+                    </ShareIcon>
+                  )}
                 </Button>
                 <Button>
                   <AddTaskOutlinedIcon /> Save
@@ -267,15 +273,13 @@ const Video = () => {
                   Delete Video
                 </DeleteVideoButton>
               ) : (
-                <Subscribe onClick={handleSub}>
-                  {currentUser.subscribedUsers?.includes(channel._id)
-                    ? "SUBSCRIBED"
-                    : "SUBSCRIBE"}
+                <Subscribe onClick={handleSub} subscribed={checkIsSubscribed}>
+                  {checkIsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
                 </Subscribe>
               )}
             </Channel>
             <Hr />
-            {/* <Comments videoId={currentVideo._id} userId={currentUser._id} /> */}
+            <Comments videoId={currentVideo._id} userId={currentUser._id} />
           </Content>
           <Recommendation tags={currentVideo.tags} />
         </>

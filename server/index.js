@@ -8,17 +8,22 @@ import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-const corsOptions = {
-  credentials: "true",
-  origin: "https://youtube-2-0-delta.vercel.app",
-};
 const app = express();
-app.use(cors(corsOptions));
 dotenv.config();
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Access-Control-Allow-Credentials",
+    credentials: true,
+  })
+);
+app.options("*");
 
 const connect = () => {
   mongoose
-    .connect(process.env.MONGO)
+    .connect(process.env.MONGO_URL)
     .then(() => {
       console.log("Connected to DB");
     })
@@ -30,6 +35,8 @@ const connect = () => {
 //middlewares
 app.use(cookieParser());
 app.use(express.json());
+
+//routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/videos", videoRoutes);
@@ -46,7 +53,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(8800, () => {
+app.listen(4000, () => {
   connect();
   console.log("Connected to Server");
 });

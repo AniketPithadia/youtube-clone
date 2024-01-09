@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router";
 import styled from "styled-components";
 import Comment from "./Comment";
 
@@ -43,7 +42,7 @@ const Comments = ({ videoId, userId }) => {
   const { currentUser } = useSelector((state) => state.user);
 
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [text, setText] = useState("");
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -54,11 +53,17 @@ const Comments = ({ videoId, userId }) => {
     fetchComments();
   }, [videoId, comments]);
 
-  //TODO: ADD NEW COMMENT FUNCTIONALITY
+  //ADD NEW COMMENT FUNCTIONALITY
   const addNewComment = async () => {
-    console.log(newComment, userId);
     try {
-      const res = await axios.post("/comments", { newComment, userId: userId });
+      const res = await axios.post("/comments", {
+        text,
+        userId,
+        videoId,
+      });
+      setComments([...comments, res.data]);
+      setText("");
+      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -71,8 +76,8 @@ const Comments = ({ videoId, userId }) => {
         <Input
           placeholder="Add a comment..."
           name="comment"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
         <Button onClick={addNewComment}>Add Coment</Button>
       </NewComment>

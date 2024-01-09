@@ -18,6 +18,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "@mui/material";
 const Container = styled.div`
   flex: 1;
   background-color: ${({ theme }) => theme.bgLighter};
@@ -27,18 +28,24 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 const Wrapper = styled.div`
-  padding: 18px 26px;
+  padding: ${({ windowSize }) => (windowSize ? "10px 20px" : "18px 26px")};
+  a {
+    width: ${({ windowSize }) => (windowSize ? "100%" : "auto")};
+  }
 `;
 
 const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: ${({ windowSize }) => (windowSize ? "0px" : "20px")};
   cursor: pointer;
   padding: 7.5px 0px;
-
   &:hover {
     background-color: ${({ theme }) => theme.soft};
   }
@@ -48,7 +55,10 @@ const Hr = styled.hr`
   margin: 15px 0px;
   border: 0.5px solid ${({ theme }) => theme.soft};
 `;
-
+const LinkText = styled.span`
+  font-size: 14px;
+  display: ${({ windowSize }) => (windowSize ? "none" : "inline-block")};
+`;
 const Login = styled.div``;
 const Button = styled.button`
   padding: 5px 15px;
@@ -66,39 +76,37 @@ const Button = styled.button`
 
 const Menu = ({ darkMode, setDarkMode }) => {
   const { currentUser } = useSelector((state) => state.user);
+  const mediaWidth = useMediaQuery("(max-width: 500px)");
 
   return (
     <Container>
-      <Wrapper>
-        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+      <Wrapper windowSize={mediaWidth}>
+        <Link to="/">
           <Item>
             <HomeIcon />
-            Home
+            <LinkText windowSize={mediaWidth}>Home</LinkText>
           </Item>
         </Link>
-        <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
+        <Link to="trends">
           <Item>
             <ExploreOutlinedIcon />
-            Explore
+            <LinkText windowSize={mediaWidth}>Explore</LinkText>
           </Item>
         </Link>
-        <Link
-          to="subscriptions"
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
+        <Link to="subscriptions">
           <Item>
             <SubscriptionsOutlinedIcon />
-            Subscriptions
+            <LinkText windowSize={mediaWidth}>Subscriptions</LinkText>
           </Item>
         </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon />
-          Library
+          <LinkText windowSize={mediaWidth}>Library</LinkText>
         </Item>
         <Item>
           <HistoryOutlinedIcon />
-          History
+          <LinkText windowSize={mediaWidth}>History</LinkText>
         </Item>
         <Hr />
         {!currentUser && (
@@ -117,44 +125,54 @@ const Menu = ({ darkMode, setDarkMode }) => {
         )}
         <Item>
           <LibraryMusicOutlinedIcon />
-          Music
+
+          <LinkText windowSize={mediaWidth}>Music</LinkText>
         </Item>
         <Item>
           <SportsBasketballOutlinedIcon />
-          Sports
+
+          <LinkText windowSize={mediaWidth}>Sports</LinkText>
         </Item>
         <Item>
           <SportsEsportsOutlinedIcon />
-          Gaming
+
+          <LinkText windowSize={mediaWidth}>Gaming</LinkText>
         </Item>
         <Item>
           <MovieOutlinedIcon />
-          Movies
+
+          <LinkText windowSize={mediaWidth}>Movies</LinkText>
         </Item>
         <Item>
           <ArticleOutlinedIcon />
-          News
+          <LinkText windowSize={mediaWidth}>News</LinkText>
         </Item>
         <Item>
           <LiveTvOutlinedIcon />
-          Live
+
+          <LinkText windowSize={mediaWidth}>Live</LinkText>
         </Item>
         <Hr />
         <Item>
           <SettingsOutlinedIcon />
-          Settings
+          <LinkText windowSize={mediaWidth}>Settings</LinkText>
         </Item>
         <Item>
           <FlagOutlinedIcon />
-          Report
+
+          <LinkText windowSize={mediaWidth}>Report</LinkText>
         </Item>
         <Item>
           <HelpOutlineOutlinedIcon />
-          Help
+
+          <LinkText windowSize={mediaWidth}>Help</LinkText>
         </Item>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlinedIcon />
-          {darkMode ? "Light" : "Dark"} Mode
+          <LinkText windowSize={mediaWidth}>
+            {" "}
+            {darkMode ? "Light" : "Dark"} Mode
+          </LinkText>
         </Item>
       </Wrapper>
     </Container>

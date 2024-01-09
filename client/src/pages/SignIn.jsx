@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { toast, ToastContainer } from "react-toastify";
@@ -142,11 +142,11 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post(
-        "https://youtube2-0-api.onrender.com/api/auth/signin",
-        { name, password, credentials: "include" }
-      );
-
+      const res = await axios.post("/auth/signin", {
+        email,
+        password,
+      });
+      console.log(res.data);
       dispatch(loginSuccess(res.data));
       navigate("/");
     } catch (err) {
@@ -158,17 +158,13 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(registerStart());
     try {
-      const res = await axios.post(
-        "https://youtube2-0-api.onrender.com/api/auth/signup",
-        {
-          name,
-          email,
-          password,
-          img: profileDownloadUrl,
-          credentials: "include",
-        }
-      );
-
+      const res = await axios.post("/auth/signup", {
+        name,
+        email,
+        password,
+        img: profileDownloadUrl,
+      });
+      console.log(res.data);
       dispatch(registerSuccess(res.data), loginSuccess(res.data));
       navigate("/");
     } catch (err) {
@@ -181,7 +177,7 @@ const SignIn = () => {
     try {
       signInWithPopup(auth, provider).then((result) => {
         axios
-          .post("https://youtube2-0-api.onrender.com/api/auth/google", {
+          .post("/auth/google", {
             name: result.user.displayName,
             email: result.user.email,
             img: result.user.photoURL,
@@ -244,9 +240,9 @@ const SignIn = () => {
         <Title>Sign in</Title>
         <SubTitle>to continue to YouTube</SubTitle>
         <Input
-          placeholder="username"
+          placeholder="Email"
           required
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <Input
           type="password"

@@ -5,7 +5,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoCallOutlinedIcon from "@mui/icons-material/VideoCallOutlined";
 import { Link, useNavigate } from "react-router-dom";
 import YouTube from "../img/logo.png";
-
+import { useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import Upload from "./Upload";
 import { loginSuccess, logout } from "../redux/userSlice";
@@ -134,6 +134,7 @@ const Navbar = () => {
   const [openLogout, setOpenLogout] = useState(false);
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
+  const mediaWidth = useMediaQuery("(max-width: 500px)");
   const setLogoutHandler = async () => {
     dispatch(logout());
     navigate("/");
@@ -149,7 +150,7 @@ const Navbar = () => {
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
             <Logo>
               <Img src={YouTube} />
-              YouTube
+              {mediaWidth ? "" : <span>YouTube</span>}
             </Logo>
           </Link>
           <Search>

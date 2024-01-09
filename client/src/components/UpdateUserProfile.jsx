@@ -60,13 +60,16 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.text};
   border-radius: 3px;
-  padding: 10px 0;
+  padding: 10px 10px;
   font-size: 18px;
   background-color: transparent;
   width: 100%;
   margin: 10px 0px;
   &::placeholder {
     padding-left: 10px;
+  }
+  &:n-th-child(3) {
+    padding: 10px 0px;
   }
 `;
 
@@ -173,14 +176,11 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
   };
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const res = await axios.put(
-      `https://youtube2-0-api.onrender.com/api/users/${currentUser._id}`,
-      {
-        name,
-        email,
-        img: profileDownloadUrl,
-      }
-    );
+    const res = await axios.put(`/users/${currentUser._id}`, {
+      name,
+      email,
+      img: profileDownloadUrl,
+    });
     setOpenUpdateProfile(false);
     dispatch(logout());
     res.status === 200 && navigate(`/signin`);
@@ -196,12 +196,14 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
             type="text"
             placeholder="Username"
             name="Name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <Input
             type="text"
             placeholder="Email"
             name="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
