@@ -20,9 +20,11 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "@mui/material";
 const Container = styled.div`
-  flex: 1;
+  flex: ${({ windowSize }) => (windowSize ? "0.6" : "1")};
+
   background-color: ${({ theme }) => theme.bgLighter};
   height: 100vh;
+  width: ${({ windowSize }) => (windowSize ? "40px" : "100%")};
   color: ${({ theme }) => theme.text};
   font-size: 14px;
   position: sticky;
@@ -43,11 +45,14 @@ const Wrapper = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ windowSize }) => (windowSize ? "0px" : "20px")};
+  gap: ${({ windowSize }) => (windowSize ? "10px" : "20px")};
   cursor: pointer;
   padding: 7.5px 0px;
   &:hover {
     background-color: ${({ theme }) => theme.soft};
+  }
+  svg {
+    font-size: ${({ windowSize }) => (windowSize ? "10px" : "24px")};
   }
 `;
 

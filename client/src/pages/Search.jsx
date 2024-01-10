@@ -9,6 +9,14 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 10px;
 `;
+const H1Text = styled.h1`
+  color: ${({ theme }) => theme.text};
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  font-weight: 400;
+  width: 100%;
+`;
 
 const Search = () => {
   const [videos, setVideos] = useState([]);
@@ -24,9 +32,11 @@ const Search = () => {
 
   return (
     <Container>
-      {videos.map((video) => (
-        <Card key={video._id} video={video} />
-      ))}
+      {videos.length > 0 ? (
+        videos.map((video) => <Card key={video._id} video={video} />)
+      ) : (
+        <H1Text>No videos match the search result!</H1Text>
+      )}
     </Container>
   );
 };

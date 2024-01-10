@@ -24,7 +24,7 @@ const Recommendation = ({ tags }) => {
       {videos
         .filter((video) => video._id !== currentVideo._id)
         .map((video) => (
-          <Card type="sm" key={video._id} video={video} />
+          <Card key={video._id} video={video} />
         ))}
     </Container>
   );

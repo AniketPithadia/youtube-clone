@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Comment from "./Comment";
-
+import CancelIcon from "@mui/icons-material/Cancel";
 const Container = styled.div``;
 
 const NewComment = styled.div`
@@ -28,19 +28,38 @@ const Input = styled.input`
   width: 100%;
 `;
 
-const Button = styled.button`
-  font-weight: 500;
-  color: ${({ theme }) => theme.text};
-  border: none;
-  background: transparent;
-  border-radius: 3px;
+const CommentButtons = styled.button`
+  color: ${({ theme }) => theme.textSoft};
+  background-color: transparent;
   border: 1px solid ${({ theme }) => theme.textSoft};
-  padding: 10px 20px;
+  outline: none;
+  padding: 8px;
+  border-radius: 25px;
+  color: ${({ theme }) => theme.textSoft};
   cursor: pointer;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 5px;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
+  svg {
+    font-size: 16px;
+  }
+`;
+const CommentContainer = styled.div`
+  psotion: relative;
+`;
+
+const Form = styled.form`
+  width: 100%;
 `;
 const Comments = ({ videoId, userId }) => {
   const { currentUser } = useSelector((state) => state.user);
-
+  const [open, setOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   useEffect(() => {
@@ -54,7 +73,8 @@ const Comments = ({ videoId, userId }) => {
   }, [videoId, comments]);
 
   //ADD NEW COMMENT FUNCTIONALITY
-  const addNewComment = async () => {
+  const addNewComment = async (e) => {
+    e.preventDefault();
     try {
       const res = await axios.post("/comments", {
         text,
@@ -73,17 +93,31 @@ const Comments = ({ videoId, userId }) => {
     <Container>
       <NewComment>
         <Avatar src={currentUser.img} />
-        <Input
-          placeholder="Add a comment..."
-          name="comment"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <Button onClick={addNewComment}>Add Coment</Button>
+        <Form onSubmit={addNewComment}>
+          <Input
+            placeholder="Add a comment..."
+            name="comment"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </Form>
       </NewComment>
-      {comments.map((comment) => (
-        <Comment key={comment._id} comment={comment} />
-      ))}
+      {comments.length === 0 && <h2>No comments yet</h2>}
+
+      {!open ? (
+        <CommentButtons onClick={() => setOpen(!open)}>
+          Show Comments
+        </CommentButtons>
+      ) : (
+        <CommentContainer>
+          <CommentButtons onClick={() => setOpen(!open)}>
+            <CancelIcon /> Hide Comments
+          </CommentButtons>
+          {comments?.map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </CommentContainer>
+      )}
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -16,7 +16,7 @@ const Container = styled.div`
   top: 0;
   z-index: 1000;
   background-color: ${({ theme }) => theme.bgLighter};
-  height: 60px;
+  hieght: auto;
 `;
 
 const Wrapper = styled.div`
@@ -24,35 +24,39 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  padding: 0px 20px;
+  padding: 10px 20px;
   position: relative;
 `;
 
-const Search = styled.div`
-  width: 30%;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  margin: auto;
+const Search = styled.form`
+  width: ${({ mediaWidth }) => (mediaWidth ? "50%" : "35%")};
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 8px 10px;
   border: 1px solid #ccc;
-  border-radius: 30px;
+  border-radius: 25px;
   cursor: pointer;
-
-  color: ${({ theme }) => theme.text};
+  button {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    svg {
+      color: ${({ theme }) => theme.text};
+    }
+  }
 `;
 
 const Input = styled.input`
+  color: ${({ theme }) => theme.text};
   border: none;
   width: 100%;
   background-color: transparent;
   outline: none;
   padding-left: 10px;
   font-size: 16px;
-  color: ${({ theme }) => theme.text};
 `;
 
 const Button = styled.button`
@@ -128,21 +132,40 @@ const Title = styled.h2`
 `;
 const Navbar = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [openUpload, setOpenUpload] = useState(false);
   const [openUpdateProfile, setOpenUpdateProfile] = useState(false);
   const [q, setQ] = useState("");
-  const [openLogout, setOpenLogout] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const dispatch = useDispatch();
+  let menuRef = useRef();
   const { currentUser } = useSelector((state) => state.user);
   const mediaWidth = useMediaQuery("(max-width: 500px)");
-  const setLogoutHandler = async () => {
+  const LogoutHandler = async () => {
     dispatch(logout());
+    setOpenProfile(!openProfile);
     navigate("/");
+  };
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search?q=${q}`);
   };
   useEffect(() => {
     dispatch(loginSuccess(currentUser));
-  }, [currentUser]);
+  }, [currentUser, dispatch]);
 
+  useEffect(() => {
+    let handler = (e) => {
+      if (!menuRef.current.contains(e.target)) {
+        setOpenProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  }, []);
   return (
     <>
       <Container>
@@ -153,26 +176,34 @@ const Navbar = () => {
               {mediaWidth ? "" : <span>YouTube</span>}
             </Logo>
           </Link>
-          <Search>
+          <Search onSubmit={handleSearchSubmit}>
             <Input
               placeholder="Search"
               onChange={(e) => setQ(e.target.value)}
             />
-            <SearchOutlinedIcon onClick={() => navigate(`/search?q=${q}`)} />
+            <button type="submit">
+              <SearchOutlinedIcon onClick={() => navigate(`/search?q=${q}`)} />
+            </button>
           </Search>
           {currentUser ? (
             <User>
               <VideoCallOutlinedIcon
-                fontSize="large"
-                onClick={() => setOpen(true)}
+                fontSize={`${mediaWidth ? "medium" : "large"}`}
+                onClick={() => setOpenUpload(!openUpload)}
               />
-              <UserOptions onClick={() => setOpenLogout(!openLogout)}>
-                <Avatar src={currentUser.img} />
-                {currentUser.name}
-                {openLogout && (
+              <UserOptions onClick={() => setOpenProfile(!openProfile)}>
+                <Avatar src={currentUser.img} ref={menuRef} />
+
+                {openProfile && (
                   <NavButtons>
-                    <NavButton onClick={setLogoutHandler}>Logout</NavButton>
-                    <NavButton onClick={() => setOpenUpdateProfile(true)}>
+                    <NavButton>{currentUser.name}</NavButton>
+                    <NavButton onClick={LogoutHandler}>Logout</NavButton>
+                    <NavButton
+                      onClick={() => {
+                        setOpenProfile(!openProfile);
+                        setOpenUpdateProfile(!openUpdateProfile);
+                      }}
+                    >
                       Update Profile
                     </NavButton>
                   </NavButtons>
@@ -189,7 +220,7 @@ const Navbar = () => {
           )}
         </Wrapper>
       </Container>
-      {open && <Upload setOpen={setOpen} />}
+      {openUpload && <Upload setOpen={setOpenUpload} />}
       {openUpdateProfile && (
         <UpdateUserProfile setOpenUpdateProfile={setOpenUpdateProfile} />
       )}

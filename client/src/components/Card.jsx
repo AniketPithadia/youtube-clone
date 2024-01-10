@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -5,10 +6,13 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { format } from "timeago.js";
 const Container = styled.div`
-  width: ${(props) => props.type !== "sm" && "360px"};
+  width: ${(props) => (props.type === "sm" ? "220px" : "350px")};
+
   margin-bottom: ${(props) => (props.type === "sm" ? "10px" : "45px")};
   cursor: pointer;
-  display: ${(props) => props.type === "sm" && "flex"};
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: ${(props) => props.type === "sm" && "column"};
   gap: 10px;
 `;
 
@@ -54,15 +58,16 @@ const Info = styled.div`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-const Card = ({ type, video }) => {
+const Card = ({ video }) => {
   const [channel, setChannel] = useState({});
+  const windowsSize = useMediaQuery("(max-width:800px)");
   const { currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     const fetchChannel = async () => {
       const res = await axios.get(`/users/find/${video.userId}`);
       setChannel(res.data);
     };
-
+    console.log(channel);
     fetchChannel();
   }, [video.userId]);
 
@@ -71,10 +76,11 @@ const Card = ({ type, video }) => {
       to={!currentUser ? "signin" : `/video/${video._id}`}
       style={{ textDecoration: "none" }}
     >
-      <Container type={type}>
-        <Image type={type} src={video.imgUrl} />
-        <Details type={type}>
-          <ChannelImage type={type} src={channel.img} />
+      <Container type={windowsSize ? "sm" : ""}>
+        <Image type={windowsSize ? "sm" : ""} src={video.imgUrl} />
+
+        <Details type={windowsSize ? "sm" : ""}>
+          <ChannelImage type={windowsSize ? "sm" : ""} src={channel.img} />
           <Texts>
             <Title>{video.title}</Title>
             <ChannelName>{channel.name}</ChannelName>

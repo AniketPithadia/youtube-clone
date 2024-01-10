@@ -14,14 +14,14 @@ import { dislike, fetchSuccess, like } from "../redux/videoSlice";
 import { format } from "timeago.js";
 import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
+import { useMediaQuery } from "@mui/material";
 
 const Container = styled.div`
   display: flex;
   gap: 24px;
-  flex-direction: row;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+
+  flex-direction: ${(props) => (props.windowSize === "sm" ? "column" : "row")};
+  font-size: ${(props) => (props.windowSize === "sm" ? "12px" : "14px")};
 `;
 
 const Content = styled.div`
@@ -119,23 +119,27 @@ const Subscribe = styled.button`
   font-weight: 500;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 25px;
   height: max-content;
-  padding: 10px 20px;
+  font-size: ${(props) => (props.windowSize === "sm" ? "12px" : "14px")};
+  padding: ${(props) => (props.windowSize === "sm" ? "8px 10px" : "10px 30px")};
+
   cursor: pointer;
 `;
 const DeleteVideoButton = styled.button`
-  background-color: #d1c8c8;
+  background-color: #f1807e;
   color: #00000a;
   font-weight: 500;
-  font-size: 14px;
-
+  font-size: ${(props) => (props.windowSize === "sm" ? "12px" : "14px")};
+  display: flex;
+  justify-content: center;
   border: none;
-  border-radius: 3px;
-  height: max-content;
-  padding: 10px 20px;
+  border-radius: 25px;
+  padding: ${(props) => (props.windowSize === "sm" ? "8px 10px" : "10px 30px")};
   cursor: pointer;
-
+  width: ${(props) => (props.windowSize === "sm" ? "100%" : "250px")};
+  height: max-content;
+  cursor: pointer;
   &:hover {
     color: white;
     background-color: #cc1a00;
@@ -155,7 +159,7 @@ const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
   const [copied, setCopied] = useState(false);
-
+  const windowSize = useMediaQuery("(max-width:600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
@@ -205,7 +209,7 @@ const Video = () => {
     navigate("/");
   };
   return (
-    <Container>
+    <Container windowSize={windowSize ? "sm" : ""}>
       {currentVideo ? (
         <>
           <Content>
@@ -269,11 +273,18 @@ const Video = () => {
                 </ChannelDetail>
               </ChannelInfo>{" "}
               {currentUser._id === currentVideo.userId ? (
-                <DeleteVideoButton onClick={handleDelete}>
+                <DeleteVideoButton
+                  windowSize={windowSize ? "sm" : ""}
+                  onClick={handleDelete}
+                >
                   Delete Video
                 </DeleteVideoButton>
               ) : (
-                <Subscribe onClick={handleSub} subscribed={checkIsSubscribed}>
+                <Subscribe
+                  onClick={handleSub}
+                  windowSize={windowSize ? "sm" : ""}
+                  subscribed={checkIsSubscribed}
+                >
                   {checkIsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
                 </Subscribe>
               )}
