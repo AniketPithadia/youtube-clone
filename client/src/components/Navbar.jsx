@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Upload from "./Upload";
 import { loginSuccess, logout } from "../redux/userSlice";
 import UpdateUserProfile from "./UpdateUserProfile";
+import axios from "axios";
 
 const Container = styled.div`
   position: sticky;
@@ -34,7 +35,7 @@ const Search = styled.form`
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 25px;
   cursor: pointer;
   button {
@@ -124,12 +125,7 @@ const Logo = styled.div`
 const Img = styled.img`
   height: 25px;
 `;
-const Title = styled.h2`
-  font-size: 14px;
-  font-weight: 500;
-  color: #aaaaaa;
-  margin-bottom: 20px;
-`;
+
 const Navbar = () => {
   const navigate = useNavigate();
   const [openUpload, setOpenUpload] = useState(false);
@@ -141,6 +137,9 @@ const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
   const mediaWidth = useMediaQuery("(max-width: 500px)");
   const LogoutHandler = async () => {
+    console.log("Logout");
+    const res = await axios.post("/auth/signout");
+    console.log(res);
     dispatch(logout());
     setOpenProfile(!openProfile);
     navigate("/");
@@ -191,8 +190,11 @@ const Navbar = () => {
                 fontSize={`${mediaWidth ? "medium" : "large"}`}
                 onClick={() => setOpenUpload(!openUpload)}
               />
-              <UserOptions onClick={() => setOpenProfile(!openProfile)}>
-                <Avatar src={currentUser.img} ref={menuRef} />
+              <UserOptions
+                ref={menuRef}
+                onClick={() => setOpenProfile(!openProfile)}
+              >
+                <Avatar src={currentUser.img} />
 
                 {openProfile && (
                   <NavButtons>

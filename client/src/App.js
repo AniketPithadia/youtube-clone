@@ -16,6 +16,7 @@ const Main = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
   position: relative;
   background-color: ${({ theme }) => theme.bg};
   @media (max-width: 500px) {

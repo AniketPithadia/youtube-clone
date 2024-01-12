@@ -5,7 +5,9 @@ import styled from "styled-components";
 import Card from "./Card";
 
 const Container = styled.div`
-  flex: 2;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const Recommendation = ({ tags }) => {
@@ -24,7 +26,7 @@ const Recommendation = ({ tags }) => {
       {videos
         .filter((video) => video._id !== currentVideo._id)
         .map((video) => (
-          <Card key={video._id} video={video} />
+          <Card key={video._id} video={video} recommendStyle={true} />
         ))}
     </Container>
   );

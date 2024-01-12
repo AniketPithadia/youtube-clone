@@ -31,7 +31,13 @@ const Content = styled.div`
 const VideoWrapper = styled.div`
   border-radius: 10px;
 `;
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
 
+  object-fit: cover;
+  border-radius: 20px;
+`;
 const Title = styled.h1`
   font-size: 18px;
   font-weight: 400;
@@ -53,9 +59,7 @@ const Details = styled.div`
 
 const Info = styled.span`
   color: ${({ theme }) => theme.textSoft};
-  @media (max-width: 500px) {
-    display: flex;
-  }
+  display: flex;
 `;
 
 const Buttons = styled.div`
@@ -145,11 +149,7 @@ const DeleteVideoButton = styled.button`
     background-color: #cc1a00;
   }
 `;
-const VideoFrame = styled.video`
-  max-height: 720px;
-  width: 100%;
-  object-fit: cover;
-`;
+
 const ShareIcon = styled.div`
   display: flex;
   align-items: center;
@@ -159,7 +159,7 @@ const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
   const [copied, setCopied] = useState(false);
-  const windowSize = useMediaQuery("(max-width:600px)");
+  const windowSize = useMediaQuery("(max-width:800px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];

@@ -53,13 +53,19 @@ const CommentButtons = styled.button`
 const CommentContainer = styled.div`
   psotion: relative;
 `;
+const NoCommentText = styled.p`
+  color: ${({ theme }) => theme.textSoft};
+  margin-top: 10px;
+  font-size: 18px;
+  text-align: center;
+`;
 
 const Form = styled.form`
   width: 100%;
 `;
 const Comments = ({ videoId, userId }) => {
   const { currentUser } = useSelector((state) => state.user);
-  const [open, setOpen] = useState(false);
+  const [openComment, setOpenComment] = useState(false);
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   useEffect(() => {
@@ -83,7 +89,7 @@ const Comments = ({ videoId, userId }) => {
       });
       setComments([...comments, res.data]);
       setText("");
-      console.log(res.data);
+      setOpenComment(true);
     } catch (err) {
       console.log(err);
     }
@@ -102,15 +108,16 @@ const Comments = ({ videoId, userId }) => {
           />
         </Form>
       </NewComment>
-      {comments.length === 0 && <h2>No comments yet</h2>}
+      {comments.length === 0 && <NoCommentText>No comments yet</NoCommentText>}
 
-      {!open ? (
-        <CommentButtons onClick={() => setOpen(!open)}>
+      {!openComment && comments.length > 0 && (
+        <CommentButtons onClick={() => setOpenComment(!openComment)}>
           Show Comments
         </CommentButtons>
-      ) : (
+      )}
+      {openComment && comments.length > 0 && (
         <CommentContainer>
-          <CommentButtons onClick={() => setOpen(!open)}>
+          <CommentButtons onClick={() => setOpenComment(!openComment)}>
             <CancelIcon /> Hide Comments
           </CommentButtons>
           {comments?.map((comment) => (

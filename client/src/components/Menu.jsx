@@ -44,10 +44,13 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: ${({ windowSize }) =>
+    windowSize ? "center" : "flex-start"}};
+      align-items: center;
   gap: ${({ windowSize }) => (windowSize ? "10px" : "20px")};
   cursor: pointer;
-  padding: 7.5px 0px;
+  padding: 7.5px 6px;
+  border-radius: 10px;
   &:hover {
     background-color: ${({ theme }) => theme.soft};
   }

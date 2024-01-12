@@ -4,20 +4,11 @@ import Card from "../components/Card";
 import axios from "axios";
 
 const Container = styled.div`
-  display: grid;
-  grid-column-gap: 30px;
-  hieght: 100vh;
-  grid-template-columns: repeat(4, 1fr);
-  @media (max-width: 1025px) {
-    grid-row-gap: 15px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 800px) {
-    z-index: 100;
-    place-items: center;
-    grid-row-gap: 15px;
-    grid-template-columns: repeat(1, 1fr);
-  }
+  display: flex;
+  align-items: center;
+
+  flex-wrap: wrap;
+  gap: 30px;
 `;
 
 const Home = ({ type }) => {
