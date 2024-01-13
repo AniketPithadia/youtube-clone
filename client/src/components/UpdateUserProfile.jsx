@@ -37,13 +37,15 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-  border-radius: 10px;
+  border-radius: 20px;
 `;
 const Close = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
-  font-size: 18px;
+  border-radius: 50%;
+  border: 2px solid ${({ theme }) => theme.soft};
+  padding: 10px 14px;
   cursor: pointer;
 `;
 const Title = styled.h1`
@@ -59,42 +61,36 @@ const InputBlock = styled.div`
 const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.text};
-  border-radius: 3px;
-  padding: 10px 10px;
+  border-radius: 20px;
+  padding: 10px 12px;
+  padding-left: 20px;
   font-size: 18px;
   background-color: transparent;
   width: 100%;
   margin: 10px 0px;
-  &::placeholder {
-    padding-left: 10px;
-  }
   &:n-th-child(3) {
-    padding: 10px 0px;
+    padding: 10px 12px;
   }
 `;
 
-const ImageUpload = styled.div`
+const ImageUpload = styled.form`
   font-size: 18px;
   background-color: transparent;
   margin: 0;
   padding: 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
-  & > input {
+  & > input: {
     border: 1px solid ${({ theme }) => theme.soft};
+    border-right: 0px;
     color: ${({ theme }) => theme.text};
-    border-radius: 3px;
-    padding: 10px 0;
+    border-radius: 20px;
+    padding: 10px 12px;
+    padding-left: 20px;
     font-size: 18px;
     background-color: transparent;
     width: 100%;
     margin: 10px 0px;
-    &::placeholder {
-      padding-left: 10px;
-    }
-    padding: 10px 0;
   }
 `;
 const Button = styled.button`
@@ -210,14 +206,13 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
           {imgPerc > 0 ? (
             "Uploading:" + imgPerc + "%"
           ) : (
-            <ImageUpload>
+            <ImageUpload onSubmit={handleImageUpload}>
               <Input
                 type="file"
                 accept="image/*"
                 name="profileImg"
                 onChange={(e) => setProfileImg(e.target.files[0])}
               />
-              <ImageButton onClick={handleImageUpload}>Upload</ImageButton>
             </ImageUpload>
           )}
         </InputBlock>
