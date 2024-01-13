@@ -6,7 +6,6 @@ import axios from "axios";
 const Container = styled.div`
   display: flex;
   align-items: center;
-
   flex-wrap: wrap;
   gap: 30px;
 `;

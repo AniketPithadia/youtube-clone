@@ -27,15 +27,14 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: auto;
-  height: 350px;
+  width: 300px;
+  height: 340px;
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
-  padding: 40px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   position: relative;
   border-radius: 20px;
 `;
@@ -43,58 +42,55 @@ const Close = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 20px;
   border-radius: 50%;
   border: 2px solid ${({ theme }) => theme.soft};
-  padding: 10px 14px;
+  background-color: #a3a1a1;
+  padding: 10px 15px;
+  color: white;
   cursor: pointer;
 `;
 const Title = styled.h1`
+  margin-top: 20px;
   text-align: center;
 `;
 const InputBlock = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
 `;
 const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.text};
   border-radius: 20px;
   padding: 10px 12px;
-  padding-left: 20px;
   font-size: 18px;
   background-color: transparent;
-  width: 100%;
-  margin: 10px 0px;
-  &:n-th-child(3) {
-    padding: 10px 12px;
-  }
+  min-width: 100%;
 `;
 
-const ImageUpload = styled.form`
-  font-size: 18px;
+const ImageUploadForm = styled.form`
   background-color: transparent;
-  margin: 0;
-  padding: 0;
   display: flex;
+  justify-content: center;
   width: 100%;
-  & > input: {
+  & > input {
     border: 1px solid ${({ theme }) => theme.soft};
-    border-right: 0px;
     color: ${({ theme }) => theme.text};
     border-radius: 20px;
-    padding: 10px 12px;
-    padding-left: 20px;
+    padding: 8px 10px;
+
     font-size: 18px;
     background-color: transparent;
-    width: 100%;
-    margin: 10px 0px;
   }
 `;
 const Button = styled.button`
-  border-radius: 3px;
+  border-radius: 20px;
   border: none;
   padding: 10px 20px;
   font-weight: 500;
@@ -103,22 +99,6 @@ const Button = styled.button`
   width: 100%;
   background-color: ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.textSoft};
-`;
-
-const ImageButton = styled.button`
-  border-top: 1px solid ${({ theme }) => theme.soft};
-  border-right: 1px solid ${({ theme }) => theme.soft};
-  border-bottom: 1px solid ${({ theme }) => theme.soft};
-  border-left: 0px;
-  color: ${({ theme }) => theme.text};
-  background-color: transparent;
-
-  outline: none;
-  border-radius: 3px;
-  padding: 13px 5px;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 16px;
 `;
 
 const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
@@ -206,14 +186,14 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
           {imgPerc > 0 ? (
             "Uploading:" + imgPerc + "%"
           ) : (
-            <ImageUpload onSubmit={handleImageUpload}>
+            <ImageUploadForm onSubmit={handleImageUpload}>
               <Input
                 type="file"
                 accept="image/*"
                 name="profileImg"
                 onChange={(e) => setProfileImg(e.target.files[0])}
               />
-            </ImageUpload>
+            </ImageUploadForm>
           )}
         </InputBlock>
         <Button onClick={handleUpdate}>Update</Button>

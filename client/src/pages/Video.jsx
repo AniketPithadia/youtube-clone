@@ -19,7 +19,6 @@ import { useMediaQuery } from "@mui/material";
 const Container = styled.div`
   display: flex;
   gap: 24px;
-
   flex-direction: ${(props) => (props.windowSize === "sm" ? "column" : "row")};
   font-size: ${(props) => (props.windowSize === "sm" ? "12px" : "14px")};
 `;
@@ -34,7 +33,6 @@ const VideoWrapper = styled.div`
 const VideoFrame = styled.video`
   max-height: 720px;
   width: 100%;
-
   object-fit: cover;
   border-radius: 20px;
 `;

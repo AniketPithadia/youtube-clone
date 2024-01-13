@@ -19,7 +19,7 @@ const Container = styled.div`
   top: 0;
   left: 0;
   z-index: 10000;
-  border-radius: 20px;
+
   background-color: #000000a7;
   display: flex;
   align-items: center;
@@ -27,9 +27,8 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: ${({ isMobile }) => (isMobile ? "330px" : "600px")};
-
-  height: ${({ isMobile }) => (isMobile ? "400px" : "600px")};
+  width: 500px;
+  height: 550px;
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   padding: 25px;
@@ -43,12 +42,16 @@ const Close = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 20px;
   border-radius: 50%;
   border: 2px solid ${({ theme }) => theme.soft};
-  padding: 10px 14px;
+  background-color: #a3a1a1;
+  padding: 10px 15px;
+  color: white;
   cursor: pointer;
 `;
 const Title = styled.h1`
+  margin-top: 20px;
   text-align: center;
 `;
 
@@ -56,10 +59,15 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.text};
   border-radius: 20px;
-  padding: 10px 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
   padding-left: 20px;
   background-color: transparent;
   z-index: 999;
+  &:placeholder {
+    vertical-align: middle;
+  }
 `;
 const Desc = styled.textarea`
   border: 1px solid ${({ theme }) => theme.soft};
@@ -156,7 +164,7 @@ const Upload = ({ setOpen }) => {
   };
 
   return (
-    <Container isMobile>
+    <Container>
       <Wrapper>
         <Close onClick={() => setOpen(false)}>X</Close>
         <Title>Upload a New Video</Title>
