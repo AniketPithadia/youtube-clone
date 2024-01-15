@@ -7,20 +7,37 @@ import styled from "styled-components";
 import { format } from "timeago.js";
 const Container = styled.div`
   width: 100%;
-
+  justify-content: flex-start;
   font-size: ${(props) => (props.type === "sm" ? "12px" : "14px")};
   margin-bottom: 10px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-  gap: 10px;
+  align-items: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "center" : "flex-start"};
+  flex-direction: ${(props) => {
+    if (props.recommendStyle && props.type === "sm") return "column";
+    if (props.recommendStyle) return "row";
+    if (props.type === "sm") return "column";
+    return "column";
+  }};
+  gap: 15px;
 `;
 
 const Image = styled.div`
   border-radius: 20px;
-  width: ${(props) => (props.type === "sm" ? "250px" : "360px")};
-  height: ${(props) => (props.type === "sm" ? "150px" : "200px")};
+
+  width: ${(props) => {
+    if (props.recommendStyle && props.type === "sm") return "220px";
+    if (props.recommendStyle) return "220px";
+    if (props.type === "sm") return "265px";
+    return "360px";
+  }};
+  height: ${(props) => {
+    if (props.recommendStyle && props.type === "sm") return "130px";
+    if (props.recommendStyle) return "110px";
+    if (props.type === "sm") return "160px";
+    return "200px";
+  }};
 
   img {
     width: 100%;
@@ -32,8 +49,10 @@ const Image = styled.div`
 
 const Details = styled.div`
   display: flex;
-  margin-top: ${(props) => props.type !== "sm" && "16px"};
+
   gap: 10px;
+  width: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "50%" : "100%"};
 `;
 
 const ChannelImage = styled.img`
@@ -41,31 +60,34 @@ const ChannelImage = styled.img`
   height: ${(props) => (props.type === "sm" ? "25px" : "36px")};
   border-radius: 50%;
   background-color: #999;
-  display: block;
+  display: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "none" : "block"};
 `;
 
 const Texts = styled.div`
   display: flex;
   flex-direction: column;
-
   justify-content: space-between;
   flex: 1;
 `;
 
 const Title = styled.h1`
-  font-size: 16px;
+  font-size: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "13px" : "14px"};
   font-weight: 500;
   color: ${({ theme }) => theme.text};
 `;
 
 const ChannelName = styled.h2`
-  font-size: 14px;
+  font-size: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "13px" : "14px"};
   color: ${({ theme }) => theme.textSoft};
-  margin: 9px 0px;
+  margin: 5px 0px;
 `;
 
 const Info = styled.div`
-  font-size: 13px;
+  font-size: ${(props) =>
+    props.recommendStyle && props.type !== "sm" ? "12px" : "13px"};
   color: ${({ theme }) => theme.textSoft};
 `;
 
@@ -86,17 +108,23 @@ const Card = ({ recommendStyle, video }) => {
       to={!currentUser ? "signin" : `/video/${video._id}`}
       style={{ textDecoration: "none" }}
     >
-      <Container type={windowsSize && "sm"} recommendStyle={recommendStyle}>
-        <Image type={windowsSize && "sm"}>
+      <Container type={windowsSize ? "sm" : ""} recommendStyle={recommendStyle}>
+        <Image type={windowsSize ? "sm" : ""} recommendStyle={recommendStyle}>
           <img src={video.imgUrl} alt="videoThumbnail" />
         </Image>
 
-        <Details type={windowsSize && "sm"}>
-          <ChannelImage type={windowsSize && "sm"} src={channel.img} />
+        <Details type={windowsSize ? "sm" : ""} recommendStyle={recommendStyle}>
+          <ChannelImage
+            type={windowsSize ? "sm" : ""}
+            src={channel.img}
+            recommendStyle={recommendStyle}
+          />
           <Texts>
-            <Title>{video.title}</Title>
-            <ChannelName>{channel.name}</ChannelName>
-            <Info>
+            <Title recommendStyle={recommendStyle}>{video.title}</Title>
+            <ChannelName recommendStyle={recommendStyle}>
+              {channel.name}
+            </ChannelName>
+            <Info recommendStyle={recommendStyle}>
               {video.views} views • {format(video.createdAt)}
             </Info>
           </Texts>

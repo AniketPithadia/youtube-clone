@@ -8,6 +8,9 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
+  height: 100%;
+  align-items: center;
+  gap: 20px;
 `;
 
 const Recommendation = ({ tags }) => {

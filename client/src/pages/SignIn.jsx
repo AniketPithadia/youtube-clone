@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FcGoogle } from "react-icons/fc";
+
 import {
   loginFailure,
   loginStart,
@@ -22,13 +24,17 @@ import app from "../firebase";
 import { auth, provider } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: ${({ windowSize }) => (windowSize ? "flex-start" : "center")};
   justify-content: center;
   height: calc(100vh - 120px);
-  font-size: 18px;
+  font-size: 16px;
+
+  margin-top: 20px;
+
   color: ${({ theme }) => theme.text};
 `;
 
@@ -36,41 +42,42 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  border-radius: 5px;
+  border-radius: 20px;
   background-color: ${({ theme }) => theme.bgLighter};
   border: 1px solid ${({ theme }) => theme.soft};
-  padding: 20px 50px;
+  padding: ${({ windowSize }) => (windowSize ? "10px 20px" : "20px 40px")};
+  width: ${({ windowSize }) => (windowSize ? "230px" : "450px")};
   gap: 10px;
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 20px;
 `;
 
 const SubTitle = styled.h2`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 300;
 `;
 
 const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
-  border-radius: 3px;
+  border-radius: 20px;
   padding: 10px;
-  font-size: 18px;
+  padding-left: 20px;
+
   background-color: transparent;
-  width: 100%;
+  width: 90%;
   color: ${({ theme }) => theme.text};
 `;
 
 const Button = styled.button`
-  border-radius: 3px;
+  border-radius: 20px;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 30px;
   font-weight: 500;
   cursor: pointer;
   background-color: ${({ theme }) => theme.soft};
   color: ${({ theme }) => theme.textSoft};
-  font-size: 18px;
 `;
 
 const More = styled.div`
@@ -89,28 +96,45 @@ const Link = styled.span`
 `;
 
 const ImageUpload = styled.div`
-  font-size: 18px;
   background-color: transparent;
   margin: 0;
   padding: 0px 10px;
+  padding-left: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 90%;
+  border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.soft};
 
   & > input {
     border: none;
     color: ${({ theme }) => theme.text};
-    border-radius: 3px;
+    border-radius: 20px;
     padding: 0;
-    font-size: 18px;
+
     background-color: transparent;
-    width: 100%;
+    width: 90%;
     margin: 10px 0px;
     &::placeholder {
       padding-left: 10px;
     }
+  }
+`;
+const GoogleSignInContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  padding: 7.5px 9px;
+  border-radius: 20px;
+  background-color: #3d3d3d;
+  &:hover {
+    background-color: ${({ theme }) => theme.soft};
+  }
+  svg {
+    font-size: ${({ windowSize }) => (windowSize ? "16px" : "24px")};
   }
 `;
 const ImageButton = styled.button`
@@ -125,12 +149,11 @@ const ImageButton = styled.button`
   padding: 13px 5px;
   font-weight: 500;
   cursor: pointer;
-  font-size: 16px;
 `;
 const SignIn = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const windowSize = useMediaQuery("(max-width: 600px)");
   const [password, setPassword] = useState("");
   const [img, setImg] = useState(undefined);
   const [profileDownloadUrl, setProfileDownloadUrl] = useState("");
@@ -235,8 +258,8 @@ const SignIn = () => {
   };
 
   return (
-    <Container>
-      <Wrapper>
+    <Container windowSize={windowSize}>
+      <Wrapper windowSize={windowSize}>
         <Title>Sign in</Title>
         <SubTitle>to continue to YouTube</SubTitle>
         <Input
@@ -252,7 +275,13 @@ const SignIn = () => {
         />
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>or</Title>
-        <Button onClick={signInWithGoogle}>Signin with Google</Button>
+        <GoogleSignInContainer
+          onClick={signInWithGoogle}
+          windowSize={windowSize}
+        >
+          <FcGoogle />
+          <span>Sign in with Google</span>
+        </GoogleSignInContainer>
         <Title>or</Title>
         <Input
           placeholder="username"

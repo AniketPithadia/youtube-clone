@@ -117,20 +117,6 @@ const Menu = ({ darkMode, setDarkMode }) => {
           <LinkText windowSize={mediaWidth}>History</LinkText>
         </Item>
         <Hr />
-        {!currentUser && (
-          <>
-            <Login>
-              Sign in to like videos, comment, and subscribe.
-              <Link to="signin" style={{ textDecoration: "none" }}>
-                <Button>
-                  <AccountCircleOutlinedIcon />
-                  SIGN IN
-                </Button>
-              </Link>
-            </Login>
-            <Hr />
-          </>
-        )}
         <Item>
           <LibraryMusicOutlinedIcon />
 

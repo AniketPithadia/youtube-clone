@@ -198,8 +198,15 @@ const Navbar = () => {
 
                 {openProfile && (
                   <NavButtons>
-                    <NavButton>{currentUser.name}</NavButton>
-                    <NavButton onClick={LogoutHandler}>Logout</NavButton>
+                    <NavButton>
+                      {" "}
+                      <Link
+                        to="channel"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {currentUser.name}
+                      </Link>
+                    </NavButton>
                     <NavButton
                       onClick={() => {
                         setOpenProfile(!openProfile);
@@ -208,6 +215,15 @@ const Navbar = () => {
                     >
                       Update Profile
                     </NavButton>
+                    <NavButton>
+                      <Link
+                        to="channel"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        Your Channel
+                      </Link>
+                    </NavButton>
+                    <NavButton onClick={LogoutHandler}>Logout</NavButton>
                   </NavButtons>
                 )}
               </UserOptions>

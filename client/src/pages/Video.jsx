@@ -15,6 +15,10 @@ import { format } from "timeago.js";
 import { subscription } from "../redux/userSlice";
 import Recommendation from "../components/Recommendation";
 import { useMediaQuery } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
+import EditVideo from "../components/EditVideo";
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +37,7 @@ const VideoWrapper = styled.div`
 const VideoFrame = styled.video`
   max-height: 720px;
   width: 100%;
+
   object-fit: cover;
   border-radius: 20px;
 `;
@@ -128,22 +133,28 @@ const Subscribe = styled.button`
 
   cursor: pointer;
 `;
-const DeleteVideoButton = styled.button`
-  background-color: #f1807e;
-  color: #00000a;
-  font-weight: 500;
+const ActionButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+const ActionButton = styled.button`
+  background-color: ${({ theme }) => theme.bgLighter};
+  border: 1px solid ${({ theme }) => theme.soft};
+  color: ${({ theme }) => theme.text};
   font-size: ${(props) => (props.windowSize === "sm" ? "12px" : "14px")};
   display: flex;
   justify-content: center;
-  border: none;
+
+  align-items: center;
   border-radius: 25px;
-  padding: ${(props) => (props.windowSize === "sm" ? "8px 10px" : "10px 30px")};
+  padding: 10px;
   cursor: pointer;
-  width: ${(props) => (props.windowSize === "sm" ? "100%" : "250px")};
+  cursor: pointer;
   height: max-content;
-  cursor: pointer;
-  &:hover {
-    color: white;
+  &:nth-child(1):hover {
+    background-color: #c1bec4;
+  }
+  &:nth-child(2):hover {
     background-color: #cc1a00;
   }
 `;
@@ -161,15 +172,17 @@ const Video = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const path = useLocation().pathname.split("/")[2];
-  const [readyForRender, setReadyForRender] = useState(false);
   const [channel, setChannel] = useState({});
   const checkIsSubscribed = currentUser.subscribedUsers?.includes(channel._id);
-
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [videoUpdated, setVideoUpdated] = useState(false);
   useEffect(() => {
-    console.log("useEffect Calling");
     const incrementView = async () => {
       await axios.put(`/videos/view/${path}`);
     };
+    incrementView();
+  }, [path]);
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const videoRes = await axios.get(`/videos/find/${path}`);
@@ -178,14 +191,12 @@ const Video = () => {
         );
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
-        setReadyForRender(true);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-    incrementView();
-  }, [path, dispatch]);
+  }, [path, dispatch, channel.subscribedUsers, videoUpdated]);
 
   const handleLike = async () => {
     await axios.put(`/users/like/${currentVideo._id}`);
@@ -207,95 +218,110 @@ const Video = () => {
     navigate("/");
   };
   return (
-    <Container windowSize={windowSize ? "sm" : ""}>
-      {currentVideo ? (
-        <>
-          <Content>
-            <VideoWrapper>
-              <VideoFrame src={currentVideo.videoUrl} controls />
-            </VideoWrapper>
-            <Title>{currentVideo.title}</Title>
-            <Details>
-              <Info>
-                {currentVideo.views} views • {format(currentVideo.createdAt)}
-              </Info>
-              <Buttons>
-                <Button onClick={handleLike}>
-                  {currentVideo.likes?.includes(currentUser?._id) ? (
-                    <ThumbUpIcon />
-                  ) : (
-                    <ThumbUpOutlinedIcon />
-                  )}
-                  {currentVideo.likes?.length}
-                </Button>
-                <Button onClick={handleDislike}>
-                  {currentVideo.dislikes?.includes(currentUser?._id) ? (
-                    <ThumbDownIcon />
-                  ) : (
-                    <ThumbDownOffAltOutlinedIcon />
-                  )}
-                  Dislike
-                </Button>
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    setCopied(true);
-                    setTimeout(() => {
-                      setCopied(false);
-                    }, 2000);
-                  }}
-                >
-                  {copied ? (
-                    <span> Copied!</span>
-                  ) : (
-                    <ShareIcon>
-                      <ReplyOutlinedIcon /> Share
-                    </ShareIcon>
-                  )}
-                </Button>
-                <Button>
-                  <AddTaskOutlinedIcon /> Save
-                </Button>
-              </Buttons>
-            </Details>
-            <Hr />
-            <Channel>
-              <ChannelInfo>
-                <Image src={channel.img} />
-                <ChannelDetail>
-                  <ChannelName>{channel.name}</ChannelName>
-                  <ChannelCounter>
-                    {channel.subscribers} subscribers
-                  </ChannelCounter>
-                  <Description>{currentVideo.desc}</Description>
-                </ChannelDetail>
-              </ChannelInfo>{" "}
-              {currentUser._id === currentVideo.userId ? (
-                <DeleteVideoButton
-                  windowSize={windowSize ? "sm" : ""}
-                  onClick={handleDelete}
-                >
-                  Delete Video
-                </DeleteVideoButton>
-              ) : (
-                <Subscribe
-                  onClick={handleSub}
-                  windowSize={windowSize ? "sm" : ""}
-                  subscribed={checkIsSubscribed}
-                >
-                  {checkIsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
-                </Subscribe>
-              )}
-            </Channel>
-            <Hr />
-            <Comments videoId={currentVideo._id} userId={currentUser._id} />
-          </Content>
-          <Recommendation tags={currentVideo.tags} />
-        </>
-      ) : (
-        <h1>Nothing here</h1>
+    <>
+      <Container windowSize={windowSize ? "sm" : ""}>
+        {currentVideo ? (
+          <>
+            <Content>
+              <VideoWrapper>
+                <VideoFrame src={currentVideo.videoUrl} controls />
+              </VideoWrapper>
+              <Title>{currentVideo.title}</Title>
+              <Details>
+                <Info>
+                  {currentVideo.views} views • {format(currentVideo.createdAt)}
+                </Info>
+                <Buttons>
+                  <Button onClick={handleLike}>
+                    {currentVideo.likes?.includes(currentUser?._id) ? (
+                      <ThumbUpIcon />
+                    ) : (
+                      <ThumbUpOutlinedIcon />
+                    )}
+                    {currentVideo.likes?.length}
+                  </Button>
+                  <Button onClick={handleDislike}>
+                    {currentVideo.dislikes?.includes(currentUser?._id) ? (
+                      <ThumbDownIcon />
+                    ) : (
+                      <ThumbDownOffAltOutlinedIcon />
+                    )}
+                    Dislike
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      setCopied(true);
+                      setTimeout(() => {
+                        setCopied(false);
+                      }, 2000);
+                    }}
+                  >
+                    {copied ? (
+                      <span> Copied!</span>
+                    ) : (
+                      <ShareIcon>
+                        <ReplyOutlinedIcon /> Share
+                      </ShareIcon>
+                    )}
+                  </Button>
+                  <Button>
+                    <AddTaskOutlinedIcon /> Save
+                  </Button>
+                </Buttons>
+              </Details>
+              <Hr />
+              <Channel>
+                <ChannelInfo>
+                  <Image src={channel.img} />
+                  <ChannelDetail>
+                    <ChannelName>{channel.name}</ChannelName>
+                    <ChannelCounter>
+                      {channel.subscribers} subscribers
+                    </ChannelCounter>
+                    <Description>{currentVideo.desc}</Description>
+                  </ChannelDetail>
+                </ChannelInfo>{" "}
+                {currentUser._id === currentVideo.userId ? (
+                  <ActionButtonContainer>
+                    <ActionButton
+                      onClick={() => setOpenEditForm(!openEditForm)}
+                    >
+                      <EditIcon />
+                    </ActionButton>
+                    <ActionButton
+                      windowSize={windowSize ? "sm" : ""}
+                      onClick={handleDelete}
+                    >
+                      <DeleteIcon />
+                    </ActionButton>
+                  </ActionButtonContainer>
+                ) : (
+                  <Subscribe
+                    onClick={handleSub}
+                    windowSize={windowSize ? "sm" : ""}
+                    subscribed={checkIsSubscribed}
+                  >
+                    {checkIsSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
+                  </Subscribe>
+                )}
+              </Channel>
+              <Hr />
+              <Comments videoId={currentVideo._id} userId={currentUser._id} />
+            </Content>
+            <Recommendation tags={currentVideo.tags} />
+          </>
+        ) : (
+          <h1>Nothing here</h1>
+        )}
+      </Container>
+      {openEditForm && (
+        <EditVideo
+          setVideoUpdated={setVideoUpdated}
+          setOpenEditForm={setOpenEditForm}
+        />
       )}
-    </Container>
+    </>
   );
 };
 
