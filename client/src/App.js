@@ -37,9 +37,9 @@ const Wrapper = styled.div`
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
-  const { currentUser } = useSelector((state) => state.user);
+
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = "http://localhost:4000/api";
+  axios.defaults.baseURL = "https://youtube2-0-api.onrender.com/";
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <SnackbarProvider>

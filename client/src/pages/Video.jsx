@@ -167,6 +167,7 @@ const ShareIcon = styled.div`
 const Video = () => {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo } = useSelector((state) => state.video);
+  console.log(currentVideo);
   const [copied, setCopied] = useState(false);
   const windowSize = useMediaQuery("(max-width:800px)");
   const dispatch = useDispatch();
