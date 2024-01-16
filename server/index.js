@@ -37,6 +37,9 @@ const connect = () => {
 //middlewares
 
 //routes
+app.get("/", (req, res) => {
+  res.send("Hello"); // For testing purposes
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/videos", videoRoutes);
