@@ -39,7 +39,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(true);
 
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = process.env.BACKEND_URL;
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL;
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <SnackbarProvider>
