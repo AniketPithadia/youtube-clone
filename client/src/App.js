@@ -39,7 +39,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(true);
 
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = "https://youtube2-0-api.onrender.com/api/";
+  axios.defaults.baseURL = process.env.BACKEND_URL;
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <SnackbarProvider>
