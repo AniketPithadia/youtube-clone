@@ -10,6 +10,8 @@ import cors from "cors";
 
 const app = express();
 dotenv.config();
+app.use(cookieParser());
+app.use(express.json());
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -33,8 +35,6 @@ const connect = () => {
 };
 
 //middlewares
-app.use(cookieParser());
-app.use(express.json());
 
 //routes
 app.use("/api/auth", authRoutes);
