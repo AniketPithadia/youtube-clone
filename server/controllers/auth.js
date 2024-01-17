@@ -18,7 +18,7 @@ export const signup = async (req, res, next) => {
         const { password: pwd, ...rest } = user._doc;
         res
           .cookie("access_token", token, {
-            httpOnly: true,
+            // httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
           })
           .status(200)
@@ -63,7 +63,7 @@ export const googleAuth = async (req, res, next) => {
       const { password, ...rest } = user._doc;
       res
         .cookie("access_token", token, {
-          httpOnly: true,
+          // httpOnly: true,
           maxAge: 24 * 60 * 60 * 1000,
         })
         .status(200)
