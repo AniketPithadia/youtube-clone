@@ -18,8 +18,10 @@ export const signup = async (req, res, next) => {
         const { password: pwd, ...rest } = user._doc;
         res
           .cookie("access_token", token, {
-            // httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true, //accessible only by web server
+            secure: true, //https
+            sameSite: "None", //cross-site cookie
+            maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
           })
           .status(200)
           .json(rest);
@@ -46,7 +48,12 @@ export const signin = async (req, res, next) => {
     jwt.sign({ id: user._id }, process.env.JWT_SECRET, {}, (err, token) => {
       if (err) throw err;
       res
-        .cookie("access_token", token, { secure: true })
+        .cookie("access_token", token, {
+          httpOnly: true, //accessible only by web server
+          secure: true, //https
+          sameSite: "None", //cross-site cookie
+          maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT)
+        })
         .status(200)
         .json(others);
     });
@@ -63,8 +70,10 @@ export const googleAuth = async (req, res, next) => {
       const { password, ...rest } = user._doc;
       res
         .cookie("access_token", token, {
-          // httpOnly: true,
-          maxAge: 24 * 60 * 60 * 1000,
+          httpOnly: true, //accessible only by web server
+          secure: true, //https
+          sameSite: "None", //cross-site cookie
+          maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
         })
         .status(200)
         .json(rest);
@@ -87,8 +96,10 @@ export const googleAuth = async (req, res, next) => {
           const { password: pwd, ...rest } = user._doc;
           res
             .cookie("access_token", token, {
-              httpOnly: true,
-              maxAge: 24 * 60 * 60 * 1000,
+              httpOnly: true, //accessible only by web server
+              secure: true, //https
+              sameSite: "None", //cross-site cookie
+              maxAge: 7 * 24 * 60 * 60 * 1000, //cookie expiry: set to match rT
             })
             .status(200)
             .json(rest);
