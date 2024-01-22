@@ -197,7 +197,7 @@ const Video = () => {
       }
     };
     fetchData();
-  }, [path, dispatch, channel.subscribedUsers, videoUpdated]);
+  }, [path, dispatch]);
 
   const handleLike = async () => {
     await axios.put(`/users/like/${currentVideo._id}`);

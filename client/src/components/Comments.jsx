@@ -76,7 +76,7 @@ const Comments = ({ videoId, userId }) => {
       } catch (err) {}
     };
     fetchComments();
-  }, [videoId, comments]);
+  }, [videoId]);
 
   //ADD NEW COMMENT FUNCTIONALITY
   const addNewComment = async (e) => {

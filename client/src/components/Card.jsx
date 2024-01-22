@@ -101,7 +101,7 @@ const Card = ({ recommendStyle, video }) => {
       setChannel(res.data);
     };
     fetchChannel();
-  }, [video.userId, channel]);
+  }, [video.userId]);
 
   return (
     <Link
