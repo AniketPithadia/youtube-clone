@@ -29,7 +29,7 @@ const Image = styled.div`
   width: ${(props) => {
     if (props.recommendStyle && props.type === "sm") return "220px";
     if (props.recommendStyle) return "220px";
-    if (props.type === "sm") return "265px";
+    if (props.type === "sm") return "255px";
     return "360px";
   }};
   height: ${(props) => {

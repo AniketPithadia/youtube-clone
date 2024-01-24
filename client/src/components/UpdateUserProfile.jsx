@@ -161,6 +161,9 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
     dispatch(logout());
     res.status === 200 && navigate(`/signin`);
   };
+  useEffect(() => {
+    profileImg && uploadFile(profileImg);
+  }, [profileImg]);
   return (
     <Container>
       <Wrapper>
@@ -186,7 +189,7 @@ const UpdateUserProfile = ({ setOpenUpdateProfile }) => {
           {imgPerc > 0 ? (
             "Uploading:" + imgPerc + "%"
           ) : (
-            <ImageUploadForm onSubmit={handleImageUpload}>
+            <ImageUploadForm>
               <Input
                 type="file"
                 accept="image/*"
